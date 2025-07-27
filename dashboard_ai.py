@@ -5,6 +5,7 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 import os
 import requests
+from video_processor import process_video
 
 # Tải biến môi trường từ .env
 load_dotenv()
@@ -52,7 +53,7 @@ DARK_THEME = """
 st.markdown(DARK_THEME, unsafe_allow_html=True)
 
 # ====== Khởi tạo clients ======
-openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # Phiên bản mới
+openai_client = OpenAI(api_key=os.getenv("OPENAI_KEY"))  # Phiên bản mới
 genai.configure(api_key=os.getenv("GEMINI_KEY"))
 claude_client = Anthropic(api_key=os.getenv("CLAUDE_KEY"))
 pexels_key = os.getenv("PEXELS_KEY")
@@ -72,7 +73,7 @@ if st.sidebar.button("💾 Lưu cài đặt"):
     st.success("Đã lưu API keys!")
 
 # ====== Tabs chính ======
-tab1, tab2, tab3, tab4 = st.tabs(["GPT-4", "Gemini", "Claude", "Pexels Images"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["GPT-4", "Gemini", "Claude", "Pexels Images", "Upload Video"])
 
 with tab1:
     st.header("🧠 OpenAI GPT-4")
@@ -143,6 +144,45 @@ with tab4:
                     st.image(img["src"]["medium"], use_column_width=True, caption=f"Photo by {img['photographer']}")
         else:
             st.warning("Không tìm thấy ảnh phù hợp!")
+
+with tab5:
+    import streamlit as st
+    from video_processor import process_video
+
+def video_upload_section():
+    """Hiển thị giao diện upload và xử lý video"""
+    st.header("🎬 Tải lên video")
+    
+    uploaded_file = st.file_uploader(
+        "Chọn file video (MP4/AVI)",
+        type=["mp4", "avi"],
+        key="video_uploader"
+    )
+    
+    if uploaded_file:
+        try:
+            # Hiển thị thông tin file (cách viết an toàn)
+            file_info = {
+                "Tên file": uploaded_file.name,
+                "Loại file": uploaded_file.type,
+                "Kích thước (MB)": round(uploaded_file.size / (1024 * 1024), 2)
+            }
+            st.json(file_info)
+            
+            # Hiển thị preview
+            st.video(uploaded_file)
+            
+            # Xử lý khi click button
+            if st.button("Xử lý video", key="process_btn"):
+                with st.spinner("Đang xử lý..."):
+                    result = process_video(uploaded_file)
+                    st.success("Xử lý thành công!")
+                    st.video(result["output_path"])
+                    
+        except Exception as e:
+            st.error(f"Lỗi xử lý: {str(e)}")
+
+
 
 # ====== Hướng dẫn ======
 with st.expander("ℹ️ HƯỚNG DẪN CÀI ĐẶT", expanded=False):
