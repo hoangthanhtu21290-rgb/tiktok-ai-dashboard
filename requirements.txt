@@ -12,3 +12,6 @@ opencv-python>=4.5.0
 pytest>=7.4.0
 pytest-mock>=3.10.0
 moviepy
+pexels_api
+requests
+gTTS
