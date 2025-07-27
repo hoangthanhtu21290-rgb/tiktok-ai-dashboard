@@ -54,7 +54,7 @@ DARK_THEME = """
 st.markdown(DARK_THEME, unsafe_allow_html=True)
 
 # ====== Khởi tạo clients ======
-openai_client = OpenAI(api_key=os.getenv("OPENAI_KEY"))  # Phiên bản mới
+openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # Phiên bản mới
 genai.configure(api_key=os.getenv("GEMINI_KEY"))
 claude_client = Anthropic(api_key=os.getenv("CLAUDE_KEY"))
 pexels_key = os.getenv("PEXELS_KEY")
