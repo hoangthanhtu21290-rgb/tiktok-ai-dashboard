@@ -5,6 +5,7 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 import os
 import requests
+from video_processor import process_video
 
 
 # Tải biến môi trường từ .env
