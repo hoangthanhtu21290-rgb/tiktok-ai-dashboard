@@ -1,5 +1,5 @@
 # video_processor.py
-from moviepy.editor import ImageClip, AudioFileClip
+from video_processor import process_video 
 from gtts import gTTS
 import requests
 import os
